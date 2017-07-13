@@ -41,6 +41,11 @@
       width: 50px;
       overflow:hidden;
     }
+
+    .table-hover tbody tr:hover td, .table-hover tbody tr:hover th {
+      background-color: rgba(0, 80, 220, 0.1);
+    }
+    
    </style>
 
   </head>
@@ -53,13 +58,14 @@
           <p class="lead">Find and <strong>connect</strong> to Steemians with the same interest</p>
           <form class="form-inline" v-on:submit.prevent>
             <input class="form-control input-lg" type="text" placeholder="Type interest..." v-model="interest">
-            <p> {{ answer }} </p>
+            <p> {{ answer }}</p>
           </form>
       </div> <!-- /jumbotron -->
 
        <!-- Table Data --> 
       <table class="table table-striped table-hover">
       <tbody>
+        <p> {{ results.length }} results found</p>
         <tr v-for="user in results">
           <td> <img :src="user.profile.profile_image" alt="Profile Image"></td>
           <td id="userName"> <a :href="'http://steemit.com/@' + user.name" target="_blank">{{ user.name }}</td>
