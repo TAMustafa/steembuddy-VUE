@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Steem-Buddy</title>
+
+    <!-- Latest compiled and minified CSS -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css?family=Signika" rel="stylesheet"> 
+    <link href="https://fonts.googleapis.com/css?family=Pacifico" rel="stylesheet">
+    
+    <!-- Custom Style -->
+    <style>
+    h1 {
+      font-family: 'Pacifico', cursive;
+    }
+
+    p {
+      font-family: 'Signika', sans-serif;
+    }
+
+    #userName {
+      font-weight: bolder;
+      font-family: 'Signika', sans-serif;
+    }
+
+    td {
+      font-family: 'Signika', sans-serif;
+    }
+
+    a:hover {
+      color: hotpink;
+    }
+
+    img {
+      border-radius: 100px;
+      height: 50px;
+      width: 50px;
+      overflow:hidden;
+    }
+   </style>
+
+  </head>
+  <body>
+    <div id="app">
+      <div class="container">
+      <div class="jumbotron text-center">
+          <h1><span class="glyphicon glyphicon-link"></span> Steem-Buddy</h1>
+          <br>
+          <p class="lead">Find and <strong>connect</strong> to Steemians with the same interest</p>
+          <form class="form-inline" v-on:submit.prevent>
+            <input class="form-control input-lg" type="text" placeholder="Type interest..." v-model="interest">
+            <p> {{ answer }} </p>
+          </form>
+      </div> <!-- /jumbotron -->
+
+       <!-- Table Data --> 
+      <table class="table table-striped table-hover">
+      <tbody>
+        <tr v-for="user in results">
+          <td> <img :src="user.profile.profile_image" alt="Profile Image"></td>
+          <td id="userName"> <a :href="'http://steemit.com/@' + user.name" target="_blank">{{ user.name }}</td>
+          <td> {{ user.profile.about }}</td>
+          <td> {{ user.profile.location }}</td>
+        </tr>
+      </tbody>
+      </table>
+
+      <!-- Navbar -->
+      <div class="navbar navbar-default navbar-fixed-bottom">
+          <div class="container">
+              <p class="navbar-text pull-left">
+              <a href="https://steemdata.com" target="_blank" >
+              <span class="glyphicon glyphicon-heart-empty"></span> Powered by SteemData</a>
+              </p>
+
+              <a href="https://steemit.com/@tarekadam" target="_blank" class="navbar-btn btn-primary btn pull-right">
+              <span class="glyphicon glyphicon-thumbs-up"></span> @tarekadam</a>
+          </div> <!-- /nav-container -->
+      </div> <!-- /navbar -->
+    </div> <!-- /container -->
+  </div> <!-- /APP -->
+ </body>
+
+    <!-- Vue.js and AXIOS CDN-->
+    <script src="https://unpkg.com/vue"></script>
+    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/lodash/4.17.4/lodash.min.js"></script>
+
+    <script>
+      var app = new Vue({
+        el: '#app',
+        data: {
+         interest: '',
+         answer: '',
+         results: ''
+        },
+
+        watch: {
+        interest: function () {
+          this.answer = 'Typing...'
+          this.getAnswer()
+          }
+        },
+
+        methods: {
+         getAnswer: _.debounce(
+            function () {
+            if (this.interest.indexOf(' ') >= 0) {
+              this.answer = 'No space please.'
+              return
+            }
+            this.answer = 'Looking for Steemians...'
+            var vm = this
+            axios.get('https://steemian-interest-api.herokuapp.com/steemians/' + vm.interest)
+              .then(function (response) {
+                vm.results = response.data.steemians
+                vm.answer = ''
+              })
+            },
+          500
+        )
+      }
+    })
+    </script>
+</html>
