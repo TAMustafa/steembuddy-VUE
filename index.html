@@ -12,6 +12,9 @@
     <link href="https://fonts.googleapis.com/css?family=Signika" rel="stylesheet"> 
     <link href="https://fonts.googleapis.com/css?family=Pacifico" rel="stylesheet">
     
+    <!-- Font Awesome -->
+    <script src="https://use.fontawesome.com/c1a8858a78.js"></script>
+    
     <!-- Custom Style -->
     <style>
     h1 {
@@ -20,6 +23,11 @@
 
     p {
       font-family: 'Signika', sans-serif;
+    }
+
+    h4 {
+    font-family: 'Signika', sans-serif;
+    color: hotpink;
     }
 
     #userName {
@@ -59,20 +67,22 @@
           <form class="form-inline" v-on:submit.prevent>
             <input class="form-control input-lg" type="text" placeholder="Type interest..." v-model="interest">
             <p> {{ answer }}</p>
+            <i v-show="loading" class="fa fa-spinner fa-2x fa-fw"></i>
           </form>
+          
       </div> <!-- /jumbotron -->
 
        <!-- Table Data --> 
-      <table class="table table-striped table-hover">
-      <tbody>
-        <p> {{ results.length }} results found</p>
-        <tr v-for="user in results">
-          <td> <img :src="user.profile.profile_image" alt="Profile Image"></td>
-          <td id="userName"> <a :href="'http://steemit.com/@' + user.name" target="_blank">{{ user.name }}</td>
-          <td> {{ user.profile.about }}</td>
-          <td> {{ user.profile.location }}</td>
-        </tr>
-      </tbody>
+      <table class="table table-striped table-hover table-responsive">
+        <tbody>
+          <h4 v-if="results.length > 1"> {{ results.length }} results found</h4>
+          <tr v-for="user in results">
+            <td> <img :src="user.profile.profile_image" alt="Profile Image"></td>
+            <td id="userName"> <a :href="'http://steemit.com/@' + user.name" target="_blank">{{ user.name }}</td>
+            <td> {{ user.profile.about }}</td>
+            <td> {{ user.profile.location }}</td>
+          </tr>
+        </tbody>
       </table>
 
       <!-- Navbar -->
@@ -102,7 +112,8 @@
         data: {
          interest: '',
          answer: '',
-         results: ''
+         results: '',
+         loading: false,
         },
 
         watch: {
@@ -120,14 +131,16 @@
               return
             }
             this.answer = 'Looking for Steemians...'
+            this.loading = true
             var vm = this
             axios.get('https://steemian-interest-api.herokuapp.com/steemians/' + vm.interest)
               .then(function (response) {
                 vm.results = response.data.steemians
+                vm.loading = false
                 vm.answer = ''
               })
             },
-          500
+          1000
         )
       }
     })
