@@ -1,22 +1,24 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="utf-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Steem-Buddy</title>
 
-    <!-- Latest compiled and minified CSS -->
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
-    <!-- Google Fonts -->
-    <link href="https://fonts.googleapis.com/css?family=Signika" rel="stylesheet"> 
-    <link href="https://fonts.googleapis.com/css?family=Pacifico" rel="stylesheet">
-    
-    <!-- Font Awesome -->
-    <script src="https://use.fontawesome.com/c1a8858a78.js"></script>
-    
-    <!-- Custom Style -->
-    <style>
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Steem-Buddy</title>
+
+  <!-- Latest compiled and minified CSS -->
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u"
+    crossorigin="anonymous">
+  <!-- Google Fonts -->
+  <link href="https://fonts.googleapis.com/css?family=Signika" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css?family=Pacifico" rel="stylesheet">
+
+  <!-- Font Awesome -->
+  <script src="https://use.fontawesome.com/c1a8858a78.js"></script>
+
+  <!-- Custom Style -->
+  <style>
     .jumbotron {
       margin-top: 8%;
       background: white;
@@ -40,8 +42,8 @@
     }
 
     h4 {
-    font-family: 'Signika', sans-serif;
-    color: hotpink;
+      font-family: 'Signika', sans-serif;
+      color: hotpink;
     }
 
     #userName {
@@ -61,104 +63,109 @@
       border-radius: 100px;
       height: 50px;
       width: 50px;
-      overflow:hidden;
+      overflow: hidden;
     }
 
-    .table-hover tbody tr:hover td, .table-hover tbody tr:hover th {
-      background-color: rgba(0, 80, 220, 0.1);
+    .table-hover tbody tr:hover td,
+    .table-hover tbody tr:hover th {
+      background-color: rgba(169, 0, 220, 0.1);
     }
-    
-   </style>
+  </style>
 
-  </head>
-  <body>
-    <div id="app">
-      <div class="container">
+</head>
+
+<body>
+  <div id="app">
+    <div class="container table-responsive">
+      <!--  JUMBOTRON    -->
       <div class="jumbotron text-center">
-          <h1><span class="glyphicon glyphicon-link"></span> Steem-Buddy</h1>
-          <br>
-          <p class="lead">Find and <strong>connect</strong> to Steemians with the same interest</p>
-          <form class="form-inline" v-on:submit.prevent>
-            <input class="form-control input-lg" type="text" placeholder="Type interest ..." v-model="interest">
-            <p> {{ answer }}</p>
-            <i v-show="loading" class="fa fa-spinner fa-pulse fa-2x fa-fw"></i>
-          </form>
-          
-      </div> <!-- /jumbotron -->
+        <h1>
+          <span class="glyphicon glyphicon-link"></span> Steem-Buddy</h1>
+        <br>
+        <p class="lead">Find and
+          <strong>connect</strong> to Steemians with the same interest</p>
+        <form class="form-inline" v-on:submit.prevent>
+          <input class="form-control input-lg" type="text" placeholder="Type interest ..." v-model="interest">
+          <p> {{ answer }}</p>
+          <i v-show="loading" class="fa fa-spinner fa-pulse fa-2x fa-fw"></i>
+        </form>
+        <!--  Table Data    -->
+        <table class="table table-striped table-hover">
+          <tbody>
+            <h4 v-if="results.length > 1"> {{ results.length }} results found</h4>
+            <tr v-for="user in results">
+              <td>
+                <img :src="user.profile.profile_image" alt="Profile Image">
+              </td>
+              <td id="userName">
+                <a :href="'http://steemit.com/@' + user.name" target="_blank">{{ user.name }}</td>
+              <td> {{ user.profile.about }}</td>
+              <td> {{ user.profile.location }}</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+    <!--  Sticky Footer    -->
+    <div class="navbar navbar-default navbar-fixed-bottom">
+      <div class="container">
+        <p class="navbar-text pull-left">
+          <a href="https://steemdata.com" target="_blank">
+            <span class="glyphicon glyphicon-heart-empty"></span> Powered by SteemData</a>
+        </p>
 
-       <!-- Table Data --> 
-      <table class="table table-striped table-hover table-responsive">
-        <tbody>
-          <h4 v-if="results.length > 1"> {{ results.length }} results found</h4>
-          <tr v-for="user in results">
-            <td> <img :src="user.profile.profile_image" alt="Profile Image"></td>
-            <td id="userName"> <a :href="'http://steemit.com/@' + user.name" target="_blank">{{ user.name }}</td>
-            <td> {{ user.profile.about }}</td>
-            <td> {{ user.profile.location }}</td>
-          </tr>
-        </tbody>
-      </table>
+        <p class="navbar-text pull-right">
+          <a href="https://steemit.com/@tarekadam" target="_blank">
+            <i class="fa fa-code" aria-hidden="true"></i> tarekadam</a>
+        </p>
+      </div>
+    </div>
+  </div>
+</body>
 
-      <!-- Navbar -->
-      <div class="navbar navbar-default navbar-fixed-bottom">
-          <div class="container">
-              <p class="navbar-text pull-left">
-                <a href="https://steemdata.com" target="_blank" >
-                <span class="glyphicon glyphicon-heart-empty"></span> Powered by SteemData</a>
-              </p>
+<!-- Vue.js and AXIOS CDN-->
+<script src="https://unpkg.com/vue"></script>
+<script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+<script src="https://cdn.jsdelivr.net/lodash/4.17.4/lodash.min.js"></script>
 
-              <p class="navbar-text pull-right">
-                <a href="https://steemit.com/@tarekadam" target="_blank">
-                <i class="fa fa-code" aria-hidden="true"></i> tarekadam</a>
-              </p>
-          </div> <!-- /nav-container -->
-      </div> <!-- /navbar -->
-    </div> <!-- /container -->
-  </div> <!-- /APP -->
- </body>
+<script>
+  var app = new Vue({
+    el: '#app',
+    data: {
+      interest: '',
+      answer: '',
+      results: '',
+      loading: false,
+    },
 
-    <!-- Vue.js and AXIOS CDN-->
-    <script src="https://unpkg.com/vue"></script>
-    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/lodash/4.17.4/lodash.min.js"></script>
-
-    <script>
-      var app = new Vue({
-        el: '#app',
-        data: {
-         interest: '',
-         answer: '',
-         results: '',
-         loading: false,
-        },
-
-        watch: {
-        interest: function () {
-          this.answer = 'Typing...'
-          this.getAnswer()
-          }
-        },
-
-        methods: {
-         getAnswer: _.debounce(
-            function () {
-            if (this.interest.indexOf(' ') >= 0) {
-              this.answer = 'No space please.'
-              return
-            }
-            this.answer = 'Looking for Steemians...'
-            this.loading = true
-            var vm = this
-            axios.get('https://steemian-interest-api.herokuapp.com/steemians/' + vm.interest)
-              .then(function (response) {
-                vm.results = response.data.steemians
-                vm.loading = false
-                vm.answer = ''
-              })
-            },
-          1000
-        )
+    watch: {
+      interest: function () {
+        this.answer = 'Typing...'
+        this.getAnswer()
       }
-    })
-    </script>
+    },
+
+    methods: {
+      getAnswer: _.debounce(
+        function () {
+          if (this.interest.indexOf(' ') >= 0) {
+            this.answer = 'No space please.'
+            return
+          }
+          this.answer = 'Searching, please wait...'
+          this.loading = true
+          var vm = this
+          axios.get('https://steemian-interest-api.herokuapp.com/steemians/' + vm.interest)
+            .then(function (response) {
+              vm.results = response.data.steemians
+              vm.loading = false
+              vm.answer = ''
+            })
+        },
+        1000
+      )
+    }
+  })
+</script>
+
 </html>
